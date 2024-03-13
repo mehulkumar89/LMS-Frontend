@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import axiosInstance from "../../helper/axiousinstance"
 import toast from "react-hot-toast"
+const id=localStorage.getItem('id')
 
 const initialState ={
   key:"",
@@ -20,7 +21,7 @@ export const getRazorpayId=createAsyncThunk('/razorpay/api',async()=>{
 })
 export const purchaseCourseBundle=createAsyncThunk('/purchaseCourse',async()=>{
   try{
-    const response=await axiosInstance.post('/payments/subscribe')
+    const response=await axiosInstance.post(`/payments/subscribe/${id}`)
     return response.data
   }
   catch(e){
