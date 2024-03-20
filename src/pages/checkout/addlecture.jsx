@@ -2,17 +2,19 @@ import { useDispatch } from "react-redux"
 import HomeLayout from "../../layout/Home"
 import { useState } from "react"
 import toast from "react-hot-toast"
-import { editprofile,fetchUser } from "../../Redux/slices/authslice"
-import { Link, useNavigate } from "react-router-dom"
+import { AddCourceLecture } from "../../Redux/slices/lectureSlice"
+import {  useLocation, useNavigate } from "react-router-dom"
 import { BsPersonCircle } from "react-icons/bs"
-import { AiOutlineArrowLeft } from "react-icons/ai"
-function Editprofile(){
+function Addlecture() {
+    const {state}=useLocation();
     const dispatch=useDispatch()
     const navigate=useNavigate()
     const[data,setdata]=useState({
         previewImage:"",
-        fullname:"",
-        avatar:undefined,
+        title:"",
+        description:"",
+        id:state,
+        lecture:undefined,
     })
     function handleImage(e){
         e.preventDefault()
@@ -24,7 +26,7 @@ function Editprofile(){
                 setdata({
                     ...data,
                     previewImage:this.result,
-                    avatar:uploadImage
+                    lecture:uploadImage
                 })
             })
         }
@@ -38,29 +40,21 @@ function Editprofile(){
     }
     async function Onsubmit(e){
         e.preventDefault();
-        if(!data.avatar || !data.avatar){
+        if(!data.lecture || !data.title || !data.description){
             toast.error('ALL FIELD REQUIRED')
             return
         }
-        if(data.fullname.length<5){
-            toast.error('NAME MUST MORE THEN 5 LETTER')
-            return
-        }
-        const formdata=new FormData()
-        formdata.append("fullname",data.fullname)
-        formdata.append("avatar",data.avatar)
-        await dispatch(editprofile(formdata))
-        await dispatch(fetchUser())
-        navigate("/user/profile")
+        await dispatch(AddCourceLecture(data))
+        navigate("/courses")
     }
-     return(
-        <HomeLayout>
+  return (
+    <HomeLayout>
         <div className="flex items-center justify-center h-[100vh]">
              <form
              onSubmit={Onsubmit}
              className="flex flex-col justify-center gap-5 rounded-lg p-6 text-white w-80 min-h-[24rem] shadow-[0_0_10px_black]">
              <h1 className="text-center text-2xl font-semibold ">
-                Edit profile
+                Add Lecture
              </h1>
              <label className="w-28 h-28 rounded-full m-auto " htmlFor="upload_img">
                {data.previewImage ? (
@@ -81,35 +75,43 @@ function Editprofile(){
              name="upload_img"
              />
              <div className="flex flex-col gap-1 ">
-             <label htmlFor="fullname" className="text-lg font-semibold">
-                Full Name
+             <label htmlFor="title" className="text-lg font-semibold">
+                Lecture Title
              </label>
              <input
                 required
                 type="text"
-                name="fullname"
-                id="fullname"
-                placeholder="ENTER YOUR NAME"
+                name="title"
+                id="title"
+                placeholder="ENTER LECTURE TITLE"
                 className="bg-transparent px-2 py-1 border"
-                value={data.fullname}
+                value={data.title}
+                onChange={handlechange}
+             />
+             </div>
+             <div className="flex flex-col gap-1 ">
+             <label htmlFor="description" className="text-lg font-semibold">
+                Lecture Description
+             </label>
+             <textarea
+                required
+                type="text"
+                name="description"
+                id="description"
+                placeholder="ENTER LECTURE DESCRIPTION"
+                className="bg-transparent px-2 py-1 h-24 resize-none border"
+                value={data.description}
                 onChange={handlechange}
              />
              </div>
              <button type="submit"
              className="w-full py-1  px-2 rounded-sm font-semibold bg-yellow-600 hover:bg-yellow-500 transition-all ease-in-out duration-300">
-                Update Profile
+                Add Lecture
              </button>
-             <Link
-             to="/user/profile"
-             >
-             <p className="link text-accent cursor-pointer flex items-center justify-center w-full gap-2">
-               <AiOutlineArrowLeft/> Go Back to Profile
-             </p>
-             </Link>
              </form>
         </div>
-
-        </HomeLayout>
-     )
+    </HomeLayout>
+  )
 }
-export default Editprofile
+
+export default Addlecture

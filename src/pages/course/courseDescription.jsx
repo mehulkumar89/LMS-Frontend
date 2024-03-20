@@ -46,7 +46,7 @@ function CourseDese(){
              </div>
              {
               role==='ADMIN' || subscription==='active'?
-              (<button className="bg-yellow-500 px-4 py-1 font-semibold rounded-md w-full">
+              (<button onClick={()=>navigate('/course/lectures',{state:{...state}})} className="bg-yellow-500 px-4 py-1 font-semibold rounded-md w-full">
               WATCH</button>
              )
               :
